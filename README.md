@@ -17,11 +17,13 @@ Environment Variables:
 
 The docker build doesn't run the TypeScript compiler or copy the `src` directory, so make sure that you've ran `npm run build` first.
 
+Remember to map UDP port 50222 to the container so that it can listen to the Tempest broadcasting on the LAN.
+
 ### Publishing instructions
 
 ```
 npm run build
-docker build . -t @kj800x/weatherflow-tempest-sensor
-docker run --env-file .env -t kj800x/weatherflow-tempest-sensor
+docker build . -t kj800x/weatherflow-tempest-sensor
+docker run -p 50222:50222/udp --env-file .env -t kj800x/weatherflow-tempest-sensor
 docker push kj800x/weatherflow-tempest-sensor
 ```
