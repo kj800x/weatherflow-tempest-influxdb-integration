@@ -5,20 +5,20 @@ interface BaseEvent {
 }
 
 interface RainStartEvent extends BaseEvent {
-  type: 'evt_precip';
+  type: "evt_precip";
   evt: [
     number // time epoch in second
   ];
 }
 
 interface RainStartEventDecoded extends BaseEvent {
-  type: 'evt_precip';
+  type: "evt_precip";
   /** time epoch in second */
   timestamp: number;
 }
 
 interface LightningStrikeEvent extends BaseEvent {
-  type: 'evt_strike';
+  type: "evt_strike";
   evt: [
     number, // time epoch in seconds
     number, // distance in km
@@ -27,7 +27,7 @@ interface LightningStrikeEvent extends BaseEvent {
 }
 
 interface LightningStrikeEventDecoded extends BaseEvent {
-  type: 'evt_strike';
+  type: "evt_strike";
   /** Time epoch in seconds */
   time: number;
   /** Distance in km */
@@ -37,7 +37,7 @@ interface LightningStrikeEventDecoded extends BaseEvent {
 }
 
 interface RapidWindEvent extends BaseEvent {
-  type: 'rapid_wind';
+  type: "rapid_wind";
   ob: [
     number, // time epoch in seconds
     number, // wind speed in mps
@@ -46,7 +46,7 @@ interface RapidWindEvent extends BaseEvent {
 }
 
 interface RapidWindEventDecoded extends BaseEvent {
-  type: 'rapid_wind';
+  type: "rapid_wind";
   /** Time epoch in seconds */
   time: number;
   /** Wind speed in meters per second */
@@ -56,82 +56,82 @@ interface RapidWindEventDecoded extends BaseEvent {
 }
 
 interface TempestObservation extends BaseEvent {
-  type: 'obs_st';
+  type: "obs_st";
   obs: [
     number, // time epoch in seconds
 
-    number, // wind lull in m/s
-    number, // wind avg in m/s
-    number, // wind gust in m/s
-    number, // wind direction in degrees
-    number, // wind sample interval in seconds
+    number | null, // wind lull in m/s
+    number | null, // wind avg in m/s
+    number | null, // wind gust in m/s
+    number | null, // wind direction in degrees
+    number | null, // wind sample interval in seconds
 
-    number, // station pressure in MB
-    number, // air temperature in C
-    number, // relative humidity in %
+    number | null, // station pressure in MB
+    number | null, // air temperature in C
+    number | null, // relative humidity in %
 
-    number, // illuminance in lux
-    number, // uv in index
-    number, // solar radiation in W/m^2
+    number | null, // illuminance in lux
+    number | null, // uv in index
+    number | null, // solar radiation in W/m^2
 
-    number, // rain amount over previous minute in mm
-    number, // precipitation type (0 = none, 1 = rain, 2 = hail)
+    number | null, // rain amount over previous minute in mm
+    number | null, // precipitation type (0 = none, 1 = rain, 2 = hail)
 
-    number, // lighting strike count
-    number, // lighting strike avg distance in km
+    number | null, // lighting strike count
+    number | null, // lighting strike avg distance in km
 
-    number, // battery in volts
-    number // report interval in minutes
+    number | null, // battery in volts
+    number | null // report interval in minutes
   ][];
   firmware_revision: number;
 }
 
 interface TempestObservationDecoded extends BaseEvent {
-  type: 'obs_st';
+  type: "obs_st";
   /** Firmware revision */
   firmwareRevision: number;
   observations: {
     /** Time epoch in seconds */
-    time: number;
+    time: number | null;
     /** Wind lull in meters per second */
-    windLull: number;
+    windLull: number | null;
     /** Wind average in meters per second */
-    windAvg: number;
+    windAvg: number | null;
     /** Wind gust in meters per second */
-    windGust: number;
+    windGust: number | null;
     /** Wind direction in degrees */
-    windDirection: number;
+    windDirection: number | null;
     /** Wind sample interval in seconds */
-    windSampleInterval: number;
+    windSampleInterval: number | null;
     /** Station pressure in millibars */
-    stationPressure: number;
+    stationPressure: number | null;
     /** Air temperature in degrees Celsius */
-    temperature: number;
+    temperature: number | null;
     /** Relative humidity in percent */
-    humidity: number;
+    humidity: number | null;
     /** Illuminance in lux */
-    illuminance: number;
+    illuminance: number | null;
     /** UV index */
-    uvIndex: number;
+    uvIndex: number | null;
     /** Solar radiation in watts per square meter */
-    solarRadiation: number;
+    solarRadiation: number | null;
     /** Rain amount over previous minute in millimeters */
-    rainAmount: number;
+    rainAmount: number | null;
     /** Precipitation type */
-    precipitationType: 'none' | 'rain' | 'hail';
+    precipitationType: "none" | "rain" | "hail" | "error";
     /** Lightning strike count */
-    lightningCount: number;
+    lightningCount: number | null;
     /** Lightning strike average distance in kilometers */
-    lightningAvgDistance: number;
+    lightningAvgDistance: number | null;
     /** Battery voltage in volts */
-    battery: number;
+    battery: number | null;
     /** Report interval in minutes */
-    reportInterval: number;
+    reportInterval: number | null;
   }[];
 }
 
-interface HubStatus extends Omit<BaseEvent, 'hub_sn'> {
-  type: 'hub_status';
+interface HubStatus extends Omit<BaseEvent, "hub_sn"> {
+  type: "hub_status";
   firmware_revision: string; // like '53'
   uptime: number;
   rssi: number;
@@ -150,8 +150,8 @@ interface HubStatus extends Omit<BaseEvent, 'hub_sn'> {
   mqtt_stats: [number, number]; // undocumented
 }
 
-interface HubStatusDecoded extends Omit<BaseEvent, 'hub_sn'> {
-  type: 'hub_status';
+interface HubStatusDecoded extends Omit<BaseEvent, "hub_sn"> {
+  type: "hub_status";
   firmware_revision: string;
   uptime: number;
   rssi: number;
@@ -178,14 +178,14 @@ interface HubStatusDecoded extends Omit<BaseEvent, 'hub_sn'> {
     version: number;
     rebootCount: number;
     i2cBusErrorCount: number;
-    status: 'off' | 'on' | 'active' | null;
+    status: "off" | "on" | "active" | null;
     networkId: number;
   };
   mqtt_stats: [number, number]; // undocumented
 }
 
 interface DeviceStatus extends BaseEvent {
-  type: 'device_status';
+  type: "device_status";
   timestamp: number;
   uptime: number;
   voltage: number;
@@ -210,7 +210,7 @@ interface DeviceStatus extends BaseEvent {
 }
 
 interface DeviceStatusDecoded extends BaseEvent {
-  type: 'device_status';
+  type: "device_status";
   timestamp: number;
   uptime: number;
   voltage: number;
@@ -250,7 +250,7 @@ export type DecodedEvent =
 
 export function decodeEvent(event: Event): DecodedEvent {
   switch (event.type) {
-    case 'evt_precip': {
+    case "evt_precip": {
       const [timestamp] = event.evt;
       return {
         hub_sn: event.hub_sn,
@@ -259,7 +259,7 @@ export function decodeEvent(event: Event): DecodedEvent {
         timestamp,
       };
     }
-    case 'evt_strike': {
+    case "evt_strike": {
       const [time, distance, energy] = event.evt;
       return {
         hub_sn: event.hub_sn,
@@ -270,7 +270,7 @@ export function decodeEvent(event: Event): DecodedEvent {
         energy,
       };
     }
-    case 'rapid_wind': {
+    case "rapid_wind": {
       const [time, speed, direction] = event.ob;
       return {
         hub_sn: event.hub_sn,
@@ -281,7 +281,7 @@ export function decodeEvent(event: Event): DecodedEvent {
         direction,
       };
     }
-    case 'obs_st': {
+    case "obs_st": {
       const [obs] = event.obs;
       const [
         time,
@@ -323,8 +323,8 @@ export function decodeEvent(event: Event): DecodedEvent {
             uvIndex,
             solarRadiation,
             rainAmount,
-            precipitationType: (['none', 'rain', 'hail'] as const)[
-              precipitationType
+            precipitationType: (["none", "rain", "hail", "error"] as const)[
+              precipitationType ?? 3
             ]!,
             lightningCount,
             lightningAvgDistance,
@@ -334,11 +334,11 @@ export function decodeEvent(event: Event): DecodedEvent {
         ],
       };
     }
-    case 'device_status': {
+    case "device_status": {
       return {
         serial_number: event.serial_number,
         hub_sn: event.hub_sn,
-        type: 'device_status',
+        type: "device_status",
         timestamp: event.timestamp,
         uptime: event.uptime,
         voltage: event.voltage,
@@ -346,7 +346,7 @@ export function decodeEvent(event: Event): DecodedEvent {
         rssi: event.rssi,
         hub_rssi: event.hub_rssi,
         sensor_status: {
-          sensors_ok: (event.sensor_status & 0b000000000) !== 0,
+          sensors_ok: event.sensor_status === 0,
           lightning_sensor_failed: (event.sensor_status & 0b000000001) !== 0,
           lightning_sensor_noise: (event.sensor_status & 0b000000010) !== 0,
           lightning_sensor_disturbance:
@@ -362,7 +362,7 @@ export function decodeEvent(event: Event): DecodedEvent {
         debug_enabled: event.debug === 1,
       };
     }
-    case 'hub_status': {
+    case "hub_status": {
       const {
         firmware_revision,
         uptime,
@@ -384,13 +384,13 @@ export function decodeEvent(event: Event): DecodedEvent {
         rssi,
         timestamp,
         reset_flags: {
-          BOR: reset_flags.includes('BOR'),
-          PIN: reset_flags.includes('PIN'),
-          POR: reset_flags.includes('POR'),
-          SFT: reset_flags.includes('SFT'),
-          WDG: reset_flags.includes('WDG'),
-          WWD: reset_flags.includes('WWD'),
-          LPW: reset_flags.includes('LPW'),
+          BOR: reset_flags.includes("BOR"),
+          PIN: reset_flags.includes("PIN"),
+          POR: reset_flags.includes("POR"),
+          SFT: reset_flags.includes("SFT"),
+          WDG: reset_flags.includes("WDG"),
+          WWD: reset_flags.includes("WWD"),
+          LPW: reset_flags.includes("LPW"),
         },
         seq,
         fs,
@@ -398,7 +398,7 @@ export function decodeEvent(event: Event): DecodedEvent {
           version: radio_stats[0],
           rebootCount: radio_stats[1],
           i2cBusErrorCount: radio_stats[2],
-          status: (['off', 'on', null, 'active'] as const)[radio_stats[3]]!,
+          status: (["off", "on", null, "active"] as const)[radio_stats[3]]!,
           networkId: radio_stats[4],
         },
         mqtt_stats,
