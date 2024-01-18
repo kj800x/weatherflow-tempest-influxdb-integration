@@ -1,11 +1,12 @@
 import client from "prom-client";
 
-const TWO_MINUTES_IN_MS = 2 * 60 * 1000;
+// It looks like we get a UDP update every 5 minutes, so we'll set a TTL of 6 minutes
+const SIX_MINUTES_IN_MS = 6 * 60 * 1000;
 const WATCHDOG_CHECK_INTERVAL = 500;
 
 export function withGaugeWatchdog<T extends string>(
   metric: client.Gauge<T>,
-  timeout: number = TWO_MINUTES_IN_MS
+  timeout: number = SIX_MINUTES_IN_MS
 ) {
   const lastSeenMap: Map<string, Date> = new Map();
 
