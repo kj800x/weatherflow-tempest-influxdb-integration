@@ -335,6 +335,13 @@ export function decodeEvent(event: Event): DecodedEvent {
       };
     }
     case "device_status": {
+      // Weatherflow has a bug where the sensor status is inverted
+      // https://community.tempest.earth/t/udp-sensor-status-655871/23807
+      // https://community.tempest.earth/t/sensor-status-bits/23272
+      // corrected_sensor_status, but want to keep things on single lines for
+      // readability
+      const css = event.sensor_status ^ 0b111111111;
+
       return {
         serial_number: event.serial_number,
         hub_sn: event.hub_sn,
@@ -346,18 +353,16 @@ export function decodeEvent(event: Event): DecodedEvent {
         rssi: event.rssi,
         hub_rssi: event.hub_rssi,
         sensor_status: {
-          sensors_ok: event.sensor_status === 0,
-          lightning_sensor_failed: (event.sensor_status & 0b000000001) !== 0,
-          lightning_sensor_noise: (event.sensor_status & 0b000000010) !== 0,
-          lightning_sensor_disturbance:
-            (event.sensor_status & 0b000000100) !== 0,
-          pressure_sensor_failed: (event.sensor_status & 0b000001000) !== 0,
-          temperature_sensor_failed: (event.sensor_status & 0b000010000) !== 0,
-          humidity_sensor_failed: (event.sensor_status & 0b000100000) !== 0,
-          wind_sensor_failed: (event.sensor_status & 0b001000000) !== 0,
-          precipitation_sensor_failed:
-            (event.sensor_status & 0b010000000) !== 0,
-          light_uv_sensor_failed: (event.sensor_status & 0b100000000) !== 0,
+          sensors_ok: (css & 0b111111111) === 0,
+          lightning_sensor_failed: (css & 0b000000001) !== 0,
+          lightning_sensor_noise: (css & 0b000000010) !== 0,
+          lightning_sensor_disturbance: (css & 0b000000100) !== 0,
+          pressure_sensor_failed: (css & 0b000001000) !== 0,
+          temperature_sensor_failed: (css & 0b000010000) !== 0,
+          humidity_sensor_failed: (css & 0b000100000) !== 0,
+          wind_sensor_failed: (css & 0b001000000) !== 0,
+          precipitation_sensor_failed: (css & 0b010000000) !== 0,
+          light_uv_sensor_failed: (css & 0b100000000) !== 0,
         },
         debug_enabled: event.debug === 1,
       };

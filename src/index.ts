@@ -157,7 +157,7 @@ const firmware_revision = withGaugeWatchdog(
   new client.Gauge({
     name: "weatherflow_firmware_revision",
     help: "firmware_revision",
-    labelNames: ["serial_number"],
+    labelNames: ["serial_number", "device"],
   })
 );
 const rssi = withGaugeWatchdog(
@@ -313,7 +313,7 @@ async function submitEvent(event: DecodedEvent) {
     uptime.set({ serial_number: event.serial_number }, event.uptime);
     voltage.set({ serial_number: event.serial_number }, event.voltage);
     firmware_revision.set(
-      { serial_number: event.serial_number },
+      { serial_number: event.serial_number, device: "station" },
       event.firmware_revision
     );
     rssi.set({ serial_number: event.serial_number }, event.rssi);
@@ -381,6 +381,11 @@ async function submitEvent(event: DecodedEvent) {
         diagnostic: "light_uv_sensor_failed",
       },
       event.sensor_status.light_uv_sensor_failed ? 1 : 0
+    );
+  } else if (event.type === "hub_status") {
+    firmware_revision.set(
+      { serial_number: event.serial_number, device: "hub" },
+      parseFloat(event.firmware_revision) // parseFloat is probably a bad idea but oh well
     );
   }
 }
