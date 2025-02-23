@@ -4,6 +4,9 @@ import dgram from "dgram";
 import { DecodedEvent, Event, decodeEvent } from "./weatherflow.js";
 import { AddressInfo } from "net";
 import { withGaugeWatchdog } from "./metricWatchdog.js";
+import process from "process";
+
+const METRICS_PORT = parseInt(process.env["METRICS_PORT"] ?? "9100", 10);
 
 const metricsServer = http.createServer((__req, res) => {
   res.setHeader("Content-Type", client.register.contentType);
@@ -18,7 +21,7 @@ metricsServer.on("listening", () => {
   console.log(`metrics on ${address.address}:${address.port}`);
 });
 
-metricsServer.listen(8080, "0.0.0.0");
+metricsServer.listen(METRICS_PORT, "0.0.0.0");
 
 const wind_lull = withGaugeWatchdog(
   new client.Gauge({
